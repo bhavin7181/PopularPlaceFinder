@@ -12,7 +12,8 @@
     "body-parser": "1.13.2",
     "method-override": "2.3.3",
     "morgan": "1.6.1",
-    "errorhandler": "1.4.1"
+    "errorhandler": "1.4.1",
+    "cloudant": "latest"
 	},
 	"repository": {},
 	"engines": {
