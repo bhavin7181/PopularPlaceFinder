@@ -7,10 +7,16 @@
 	},
 	"dependencies": {
 		"express": "4.13.x",
-		"cfenv": "1.0.x"
+		"cfenv": "1.0.x",
+		"ejs": "*",
+    "body-parser": "1.13.2",
+    "method-override": "2.3.3",
+    "morgan": "1.6.1",
+    "errorhandler": "1.4.1"
 	},
 	"repository": {},
 	"engines": {
 		"node": "4.2.x"
 	} 
+
 }
