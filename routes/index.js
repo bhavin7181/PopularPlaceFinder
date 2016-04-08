@@ -19,6 +19,7 @@ exports.index = function(req, res){
 };
 
 exports.image = function(req,res){
+	var flag = true;
 var me = "b5e1370d-5032-4e7a-945e-8486709389ae-bluemix"; // Set this to your own account 
 	    var password = "2f030d5f3576e96defb68e04a6901074f14fda0b6ad3db53722a3ae80b84fe70";
 	    var cloudant = Cloudant({account:me, password:password});
@@ -29,7 +30,8 @@ var str =new Buffer('');
 var lat;
 var lng;
 
-http.get("http://maps.googleapis.com/maps/api/geocode/json?address="+loc+"", function(rest) {
+var encoded_url = encodeURI("http://maps.googleapis.com/maps/api/geocode/json?address="+loc+"");
+http.get(encoded_url, function(rest) {
 
     //rest.setEncoding('utf8');
     if(rest.statusCode == 200)
@@ -39,22 +41,25 @@ http.get("http://maps.googleapis.com/maps/api/geocode/json?address="+loc+"", fun
     	try {
     		var arrayTemp = JSON.parse(chunk);
         } catch(e) {
+        	flag = false;
             console.log('malformed request');
-           ejs.renderFile('./views/image.ejs', {
-    				title : "./images/newapp-icon.png",
-    				lng : "No available longitude, its malformed request",
-    				lat : " No available latitude, its malformed request",
-    				loc : loc
+           ejs.renderFile('./views/index.ejs',{
+           	errreq:"Malformed request, Submit location again",
+           	loc:loc
+           }, {
     				
-    			}, function(err, result) {
-    				if (!err) {
-    					res.end(result);
+    				
+    			}, function(err5, result5) {
+    				if (!err5) {
+    					res.end(result5);
     				} else {
-    					res.end(err);
+    					console.log(err5);
+    					res.end(err5);
     				}
     			});
         }
-    	
+    	if(flag)
+    	{
         if(typeof arrayTemp['results'][0] != "undefined"){
     		
     	
@@ -110,9 +115,11 @@ http.get("http://maps.googleapis.com/maps/api/geocode/json?address="+loc+"", fun
 
     		
     	});
+	}
 
 }
 else{
+	console.log("In else1")
 	ejs.renderFile('./views/image.ejs', {
     				title : "./images/newapp-icon.png",
     				lng : "No available longitude",
@@ -130,6 +137,7 @@ else{
    });
 }
 else{
+	console.log("In else2");
 		ejs.renderFile('./views/image.ejs', {
     				title : "./images/newapp-icon.png",
     				lng : "No available longitude",
@@ -144,7 +152,7 @@ else{
     			});
 }
 });
-
+console.log("Hey")
 };
 
 

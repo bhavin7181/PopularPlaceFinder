@@ -10,7 +10,13 @@
 <body>
 <div class = "container" style="background:#F5F8FA;>
 <div class = "row">
-<div class = "col-md-4">
+<div class = "col-md-4" style = "border:solid 1px;border-colr:red;">
+
+<% if(typeof errreq != "undefined"){
+	if(errreq!=null){ %>
+		<h4><%= loc %> </h4>
+		<h4><%= errreq %> </h4>
+	<% }} %>
 </div>
 <div class = "col-md-4">
 <form action = "/image"  style="margin-top:150px;">
