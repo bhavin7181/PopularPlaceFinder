@@ -3,28 +3,38 @@
 <html>
 <head>
  <link rel="stylesheet" href="/stylesheets/style.css">
+ 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
 </head>
 <body>
-<div class = "container" style="background:#F5F8FA;>
-<div class = "row">
-<div class = "col-md-4" style = "border:solid 1px;border-colr:red;">
+<div class = "container-fluid" style="background:#00aced");">
+  <div class="row">
+  <div class="col-md-4"></div>
+  <div class="col-md-6">
+  <div class="h3" style="margin-left:40px">
+    <h2 style="color:white">Popular Places Finder</h2>      
+  </div>    
+  
+  </div>
+  </div>
+  </div>
 
-<% if(typeof errreq != "undefined"){
-	if(errreq!=null){ %>
-		<h4><%= loc %> </h4>
-		<h4><%= errreq %> </h4>
-	<% }} %>
-</div>
+<div class = "container" style="background:#F5F8FA;">
+<div class = "rows">
+<h1 align="center" style="margin-top:100px">Enter The Next Street Destination You Want To Visit</h1></br></br>
 <div class = "col-md-4">
-<form action = "/image"  style="margin-top:150px;">
-<div class="form-group">
-Enter Location: <input type = "text" name = "loc" id = "loc" />
 </div>
-<div class="form-group">
-<input type= "submit" value  = "Submit" class  = "btn btn-info"/>
+<div class = "col-md-4" >
+<form style="margin-top:-40px;">
+<div class="form-group" >
+</br></br>
+
+Enter Location: <input type = "text" name = "loc" id = "loc" />
+<input type= "button" onclick="getLatLong()" value  = "Submit" class  = "btn btn-info"/>
+</br>
+</br></br></br>
 </div>
 </form>
 </div>
@@ -32,7 +42,66 @@ Enter Location: <input type = "text" name = "loc" id = "loc" />
 </div>
 </div>
 </div>
+<div id="imageHeader" class="rows" >
+	
+	</div>
 
+<div class="container-fluid" style="background:#00aced">
+
+	<div id="imagesDiv" class="rows">
+	
+		
+	</div>
+</div>
+</div>
 </body>
 </html>
+<script type="text/javascript">
 
+function getLatLong()
+{
+
+$("#imageHeader").html('');
+$("#imageHeader").append("<div class='col-md-3' ></div><div class='col-md-6' style='background:#00aced;'><h2 style='color:white'>Here are the streets you wanted to explore !!!</h2></div>");
+	$.post("/image",{ location: $("#loc").val()},function(data)
+	{
+		
+		$("#imagesDiv").html('');
+		if(data.isDataAvailable)
+		{
+		
+			$.ajax({
+			      type: "GET",
+			      dataType: "jsonp",
+			      cache: false,
+			      url: "https://api.instagram.com/v1/locations/search?lat="+data.lat+"&lng="+data.lng+"&access_token=394535678.e7d037f.403daf6b7c1344278b7d246fdf894023",
+				  success:function(list) {
+				 
+					 $.each(list,function(index,item)
+					  {
+						 $.each(item,function(i,item2)
+						 {
+					 		if(typeof item2.latitude != "undefined" && typeof item2.longitude != "undefined")
+				 			{
+				 			
+					 			$.post("/getPopularImage",{"item":item2},function(imageSrcDetails)
+					 					{
+					 						var imageData = "<div style=\"border: 2px solid #ffffff\" class = \"col-md-4\">"+
+					 						"<center><h4><strong>Place:"+imageSrcDetails.loc+"</strong><h4></center><hr/><center><img src ="+imageSrcDetails.title+" class=\"img-thumbnail\" style='margin-bottom:10px;' /></center></div>";
+					 						$("#imagesDiv").append(imageData);
+					 					});
+				 			}
+						 }); 
+						 });
+					}
+				});
+	}
+
+		else
+		{
+			var imageData = "<div style=\"float:left\" class = \"col-md-4\">No images found</div>";
+				$("#imagesDiv").html(imageData);
+		}
+	});	
+}
+</script>

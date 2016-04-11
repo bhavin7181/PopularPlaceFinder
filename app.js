@@ -24,7 +24,8 @@ if ('development' === app.get('env')) {
 }
 
 app.get('/', routes.index);
-app.get('/image', routes.image);
+app.post('/image', routes.image);
+app.post('/getPopularImage',routes.getPopular);
 
 
 
